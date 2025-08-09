@@ -27,22 +27,6 @@ export const createUserZodSchema = z.object({
 
 
 export const updateUserZodSchema = z.object({
-    fullName: z
-        .string({ error: "Full Name must be string" })
-        .min(2, { message: "Full Name must be at least 2 characters long." })
-        .max(50, { message: "Full Name cannot exceed 50 characters." }).optional(),
-    password: z
-        .string({ error: "Password must be string" })
-        .min(8, { message: "Password must be at least 8 characters long." })
-        .regex(/^(?=.*[A-Z])/, {
-            message: "Password must contain at least 1 uppercase letter.",
-        })
-        .regex(/^(?=.*[!@#$%^&*])/, {
-            message: "Password must contain at least 1 special character.",
-        })
-        .regex(/^(?=.*\d)/, {
-            message: "Password must contain at least 1 number.",
-        }).optional(),
     role: z
         .enum(Object.values(Role) as [string])
         .optional(),
@@ -51,8 +35,5 @@ export const updateUserZodSchema = z.object({
         .optional(),
     isDeleted: z
         .boolean({ error: "isDeleted must be true or false" })
-        .optional(),
-    otpVerified: z
-        .boolean({ error: "isVerified must be true or false" })
         .optional()
 });

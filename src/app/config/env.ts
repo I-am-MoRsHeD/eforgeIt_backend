@@ -14,22 +14,12 @@ interface EnvVars {
     ADMIN_EMAIL: string;
     ADMIN_PASSWORD: string;
     FRONTEND_URL: string;
+    MAIL_USER: string;
+    MAIL_PASS: string;
     // EXPRESS_SESSION_SECRET: string;
-    // SSL: {
-    //     SSL_STORE_ID: string,
-    //     SSL_STORE_PASS: string,
-    //     SSL_PAYMENT_API: string,
-    //     SSL_VALIDATION_API: string,
-    //     SSL_SUCCESS_FRONTEND_URL: string,
-    //     SSL_FAIL_FRONTEND_URL: string,
-    //     SSL_CANCEL_FRONTEND_URL: string,
-    //     SSL_SUCCESS_BACKEND_URL: string,
-    //     SSL_FAIL_BACKEND_URL: string,
-    //     SSL_CANCEL_BACKEND_URL: string,
-    // }
 };
 
-const requiredEnvVariables: string[] = ['PORT', 'DB_URL', 'NODE_ENV', 'JWT_ACCESS_SECRET', 'JWT_ACCESS_EXPIRES', 'JWT_REFRESH_SECRET', 'JWT_REFRESH_EXPIRES', 'BCRYPT_SALT_ROUNDS', 'ADMIN_EMAIL', 'ADMIN_PASSWORD', 'FRONTEND_URL'];
+const requiredEnvVariables: string[] = ['PORT', 'DB_URL', 'NODE_ENV', 'JWT_ACCESS_SECRET', 'JWT_ACCESS_EXPIRES', 'JWT_REFRESH_SECRET', 'JWT_REFRESH_EXPIRES', 'BCRYPT_SALT_ROUNDS', 'ADMIN_EMAIL', 'ADMIN_PASSWORD', 'FRONTEND_URL', 'MAIL_USER', 'MAIL_PASS'];
 
 const loadEnvVariables = (): EnvVars => {
     requiredEnvVariables.forEach((envVar) => {
@@ -49,19 +39,9 @@ const loadEnvVariables = (): EnvVars => {
         ADMIN_EMAIL: process.env.ADMIN_EMAIL as string,
         ADMIN_PASSWORD: process.env.ADMIN_PASSWORD as string,
         FRONTEND_URL: process.env.FRONTEND_URL as string,
+        MAIL_USER: process.env.MAIL_USER as string,
+        MAIL_PASS: process.env.MAIL_PASS as string,
         // EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
-        // SSL: {
-        //     SSL_STORE_ID: process.env.SSL_STORE_ID as string,
-        //     SSL_STORE_PASS: process.env.SSL_STORE_PASS as string,
-        //     SSL_PAYMENT_API: process.env.SSL_PAYMENT_API as string,
-        //     SSL_VALIDATION_API: process.env.SSL_VALIDATION_API as string,
-        //     SSL_SUCCESS_FRONTEND_URL: process.env.SSL_SUCCESS_FRONTEND_URL as string,
-        //     SSL_FAIL_FRONTEND_URL: process.env.SSL_FAIL_FRONTEND_URL as string,
-        //     SSL_CANCEL_FRONTEND_URL: process.env.SSL_CANCEL_FRONTEND_URL as string,
-        //     SSL_SUCCESS_BACKEND_URL: process.env.SSL_SUCCESS_BACKEND_URL as string,
-        //     SSL_FAIL_BACKEND_URL: process.env.SSL_FAIL_BACKEND_URL as string,
-        //     SSL_CANCEL_BACKEND_URL: process.env.SSL_CANCEL_BACKEND_URL as string,
-        // }
     };
 }
 

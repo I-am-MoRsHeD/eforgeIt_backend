@@ -1,15 +1,26 @@
 import { Router } from "express";
+import { userRoutes } from "../modules/user/user.route";
+import { authRoutes } from "../modules/auth/auth.route";
+import { otpRoutes } from "../modules/otp/otp.route";
 
 
 export const router = Router();
 
-// const moduleRoutes = [
-//     {
-//         path: '/user',
-//         route: userRoutes
-//     },
-// ];
+const moduleRoutes = [
+    {
+        path: '/users',
+        route: userRoutes
+    },
+    {
+        path: '/auth',
+        route: authRoutes
+    },
+    {
+        path: '/otp',
+        route: otpRoutes
+    },
+];
 
-// moduleRoutes.forEach((route) => {
-//     router.use(route.path, route.route);
-// })
+moduleRoutes.forEach((route) => {
+    router.use(route.path, route.route);
+})
