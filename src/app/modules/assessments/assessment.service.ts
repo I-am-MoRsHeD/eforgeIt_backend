@@ -21,7 +21,8 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
 
     let correctCount = 0;
     for (const res of responses) {
-        const ques = getQuestions.find(ques => ques?._id.toString() === res.question);
+        // const ques = getQuestions.find(ques => ques?._id.toString() === res.question);
+        const ques = getQuestions.find(ques => ques?._id.equals(new Types.ObjectId(res.question)));
         if (ques && ques.correctAnswer === res.answer) {
             correctCount++;
         };

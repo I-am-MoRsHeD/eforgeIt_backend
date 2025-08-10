@@ -19,11 +19,11 @@ const certificateSchema = new Schema<ICertification>({
         required: true
     },
     startedAt: {
-        type: String,
+        type: Date,
         required: true
     },
     completedAt: {
-        type: String,
+        type: Date,
         required: true
     },
     issuedAt: {

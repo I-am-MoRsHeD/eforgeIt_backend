@@ -39,8 +39,8 @@ async function generateCertificatePDF(data: Partial<ICertification>): Promise<Bu
 
             // Dates
             doc.fontSize(12)
-                .text(`Started time: ${data.startedAt?.toDateString()}`, { align: 'center' })
-                .text(`Completed time: ${data.completedAt?.toDateString()}`, { align: 'center' })
+                .text(`Started time: ${data.startedAt}`, { align: 'center' })
+                .text(`Completed time: ${data.completedAt}`, { align: 'center' })
                 .text(`Issued At: ${data.issuedAt?.toDateString()}`, { align: 'center' });
 
             doc.moveDown(3);
