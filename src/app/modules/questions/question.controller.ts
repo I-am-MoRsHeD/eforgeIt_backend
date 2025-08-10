@@ -7,13 +7,13 @@ import { QuestionServices } from "./question.service";
 
 
 const createQuestions = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const questions = await QuestionServices.createQuestions(req.body);
+    const question = await QuestionServices.createQuestions(req.body);
 
     sendResponse(res, {
         statusCode: 201,
         success: true,
         message: "Question created successfully!",
-        data: {}
+        data: question
     });
 });
 

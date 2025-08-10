@@ -16,5 +16,5 @@ export interface IQuestion {
     correctAnswer: string;
     competency: string;
     level: TLevel;
-    createdBy?: string;
+    createdBy: string;
 }

@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { IQuestion } from "./question.interface";
 import { Competency } from "../../interface/globalTypes";
+import { Role } from "../user/user.interface";
 
 
 const questionSchema = new Schema<IQuestion>({
@@ -28,7 +29,7 @@ const questionSchema = new Schema<IQuestion>({
     createdBy: {
         type: String,
         required: true,
-        default: 'Admin'
+        default: Role.ADMIN
     },
 }, {
     versionKey: false,
