@@ -9,7 +9,7 @@ import { generateAndSendCertificate } from "../../utils/certificate";
 const createAssessment = async (payload: Partial<IAssessments>, step: number, userId: string) => {
     const responses = payload.responses as TResponse[];
 
-    if (responses.length < 22) {
+    if (responses.length < 44) {
         throw new AppError(400, "Please fill all the fields");
     }
     const questionsId = responses.map(res => new Types.ObjectId(res.question));

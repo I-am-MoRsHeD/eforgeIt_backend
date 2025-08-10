@@ -7,13 +7,13 @@ import { sendResponse } from "../../utils/sendResponse";
 
 
 const createUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    await UserServices.createUser(req.body);
+    const user = await UserServices.createUser(req.body);
 
     sendResponse(res, {
         statusCode: 201,
         success: true,
         message: "OTP sent to email. Please verify.",
-        data: {}
+        data: user
     });
 });
 
