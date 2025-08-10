@@ -8,7 +8,7 @@ export interface ICertification {
     userId: Types.ObjectId;
     level: TLevel;
     score: number;
-    startedAt: string;
-    completedAt: string;
+    startedAt: Date;
+    completedAt: Date;
     issuedAt: Date;
 };

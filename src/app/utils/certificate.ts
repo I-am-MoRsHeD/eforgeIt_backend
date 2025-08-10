@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import PDFDocument from 'pdfkit';
 import nodemailer from 'nodemailer';
-import streamBuffers from 'stream-buffers';
 import { ICertification } from '../modules/certification/certification.interface';
 import { User } from '../modules/user/user.model';
 import { IUser } from '../modules/user/user.interface';
+import { envVars } from '../config/env';
 
 
 async function generateCertificatePDF(data: Partial<ICertification>): Promise<Buffer> {
@@ -14,39 +14,39 @@ async function generateCertificatePDF(data: Partial<ICertification>): Promise<Bu
         const user = await User.findById(data.userId) as IUser;
         if (!user) throw new Error('User not found');
 
-        return new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             const doc = new PDFDocument({ size: 'A4', margin: 50 });
-            const bufferStream = new streamBuffers.WritableStreamBuffer() as any;
+            const chunks: Buffer[] = [];
 
-            doc.pipe(bufferStream);
+            doc.on('data', chunk => chunks.push(chunk));
+            doc.on('end', () => {
+                resolve(Buffer.concat(chunks));
+            });
+            doc.on('error', reject);
 
+            // Title
             doc.fontSize(28).text('Certificate of Achievement', { align: 'center' });
             doc.moveDown(2);
 
+            // Recipient
             doc.fontSize(20).text(`Awarded to: ${user.fullName}`, { align: 'center' });
             doc.moveDown(1);
 
+            // Level and score
             doc.fontSize(16).text(`Level Achieved: ${data.level}`, { align: 'center' });
             doc.text(`Score: ${data.score}`, { align: 'center' });
             doc.moveDown(1);
 
+            // Dates
             doc.fontSize(12)
-                .text(`Started At: ${data.startedAt}`, { align: 'center' })
-                .text(`Completed At: ${data.completedAt}`, { align: 'center' })
+                .text(`Started time: ${data.startedAt?.toDateString()}`, { align: 'center' })
+                .text(`Completed time: ${data.completedAt?.toDateString()}`, { align: 'center' })
                 .text(`Issued At: ${data.issuedAt?.toDateString()}`, { align: 'center' });
 
             doc.moveDown(3);
             doc.fontSize(14).text('Congratulations on your achievement!', { align: 'center' });
 
             doc.end();
-
-            bufferStream.on('finish', () => {
-                resolve(bufferStream.getBuffer());
-            });
-
-            bufferStream.on('error', (err: any) => {
-                reject(err);
-            });
         });
     } catch (error) {
         console.error('Error generating PDF:', error);
@@ -56,17 +56,15 @@ async function generateCertificatePDF(data: Partial<ICertification>): Promise<Bu
 
 async function sendCertificateEmail(userEmail: string, pdfBuffer: Buffer) {
     const transporter = nodemailer.createTransport({
-        host: 'smtp.example.com',
-        port: 587,
-        secure: false,
+        service: 'gmail',
         auth: {
-            user: 'your_email@example.com',
-            pass: 'your_email_password',
-        },
+            user: envVars.MAIL_USER,
+            pass: envVars.MAIL_PASS
+        }
     });
 
     const mailOptions = {
-        from: '"Your App" <no-reply@yourapp.com>',
+        from: '"School Assessment Test" <no-reply@yourapp.com>',
         to: userEmail,
         subject: 'Your Certificate of Achievement',
         text: 'Congratulations! Please find your certificate attached.',

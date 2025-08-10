@@ -9,7 +9,7 @@ import { generateAndSendCertificate } from "../../utils/certificate";
 const createAssessment = async (payload: Partial<IAssessments>, step: number, userId: string) => {
     const responses = payload.responses as TResponse[];
 
-    if (responses.length < 44) {
+    if (responses.length < 22) {
         throw new AppError(400, "Please fill all the fields");
     }
     const questionsId = responses.map(res => new Types.ObjectId(res.question));
@@ -45,12 +45,14 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
         else if (score < 50) {
             certification = "A1"
             certificateDoc.level = "A1"
-            certificateDoc.score = Number(score.toFixed(2))
+            certificateDoc.score = Number(score.toFixed(2));
+            generateAndSendCertificate(certificateDoc, userId);
         }
         else if (score < 75) {
             certification = "A2"
             certificateDoc.level = "A2"
-            certificateDoc.score = Number(score.toFixed(2))
+            certificateDoc.score = Number(score.toFixed(2));
+            generateAndSendCertificate(certificateDoc, userId);
         }
         else {
             certification = "A2 + Proceed to Step 2";
@@ -61,16 +63,19 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
             certification = "A2";
             certificateDoc.level = "A2"
             certificateDoc.score = Number(score.toFixed(2))
+            generateAndSendCertificate(certificateDoc, userId);
         }
         else if (score < 50) {
             certification = "B1";
             certificateDoc.level = "B1"
             certificateDoc.score = Number(score.toFixed(2))
+            generateAndSendCertificate(certificateDoc, userId);
         }
         else if (score < 75) {
             certification = "B2";
             certificateDoc.level = "B2"
             certificateDoc.score = Number(score.toFixed(2))
+            generateAndSendCertificate(certificateDoc, userId);
         }
         else {
             certification = "B2 + Proceed to Step 3";
@@ -81,16 +86,19 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
             certification = "B2";
             certificateDoc.level = "B2"
             certificateDoc.score = Number(score.toFixed(2))
+            generateAndSendCertificate(certificateDoc, userId);
         }
         else if (score < 50) {
             certification = "C1";
             certificateDoc.level = "C1"
             certificateDoc.score = Number(score.toFixed(2))
+            generateAndSendCertificate(certificateDoc, userId);
         }
         else {
             certification = "C2";
             certificateDoc.level = "C2"
             certificateDoc.score = Number(score.toFixed(2))
+            generateAndSendCertificate(certificateDoc, userId);
             payload.nextStepEligible = false
         }
     };
@@ -98,7 +106,7 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
     const data = {
         userId,
         responses,
-        score,
+        score: `${Number(score.toFixed(2))}`,
         certificateLevel: certification,
         startedAt: payload.startedAt,
         completedAt: payload.completedAt,
@@ -107,7 +115,6 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
     };
 
     const assessment = await Assessment.create(data);
-    generateAndSendCertificate(certificateDoc, userId)
     return assessment
 };
 
