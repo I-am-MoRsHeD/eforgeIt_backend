@@ -3,6 +3,7 @@ import AppError from "../../errorHelpers/AppError";
 import { Question } from "../questions/question.model";
 import { IAssessments, TResponse } from "./assessment.interface";
 import { Assessment } from "./assessment.model";
+import { generateAndSendCertificate } from "../../utils/certificate";
 
 
 const createAssessment = async (payload: Partial<IAssessments>, step: number, userId: string) => {
@@ -27,18 +28,29 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
     };
 
     const score = ((Number(correctCount) / Number(responses.length)) * 100);
-    console.log(score);
 
     let certification = null;
+    const certificateDoc = {
+        userId: userId,
+        level: '',
+        score: 0,
+        startedAt: payload.startedAt,
+        completedAt: payload.completedAt,
+        issuedAt: new Date(),
+    }
     if (step === 1) {
         if (score < 25) {
             certification = "Fail. Can't retake the test";
         }
         else if (score < 50) {
             certification = "A1"
+            certificateDoc.level = "A1"
+            certificateDoc.score = Number(score.toFixed(2))
         }
         else if (score < 75) {
             certification = "A2"
+            certificateDoc.level = "A2"
+            certificateDoc.score = Number(score.toFixed(2))
         }
         else {
             certification = "A2 + Proceed to Step 2";
@@ -47,12 +59,18 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
     } else if (step === 2) {
         if (score < 25) {
             certification = "A2";
+            certificateDoc.level = "A2"
+            certificateDoc.score = Number(score.toFixed(2))
         }
         else if (score < 50) {
             certification = "B1";
+            certificateDoc.level = "B1"
+            certificateDoc.score = Number(score.toFixed(2))
         }
         else if (score < 75) {
             certification = "B2";
+            certificateDoc.level = "B2"
+            certificateDoc.score = Number(score.toFixed(2))
         }
         else {
             certification = "B2 + Proceed to Step 3";
@@ -61,12 +79,18 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
     } else if (step === 3) {
         if (score < 25) {
             certification = "B2";
+            certificateDoc.level = "B2"
+            certificateDoc.score = Number(score.toFixed(2))
         }
         else if (score < 50) {
             certification = "C1";
+            certificateDoc.level = "C1"
+            certificateDoc.score = Number(score.toFixed(2))
         }
         else {
             certification = "C2";
+            certificateDoc.level = "C2"
+            certificateDoc.score = Number(score.toFixed(2))
             payload.nextStepEligible = false
         }
     };
@@ -83,7 +107,7 @@ const createAssessment = async (payload: Partial<IAssessments>, step: number, us
     };
 
     const assessment = await Assessment.create(data);
-
+    generateAndSendCertificate(certificateDoc, userId)
     return assessment
 };
 
